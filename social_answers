@@ -1,0 +1,43 @@
+Michelle Algya
+Assignment 4 Answers
+
+1.
+select name
+from Highschooler
+where ID in (select ID1 from Friend where ID2 in (select ID from Highschooler where name = "Gabriel"));
+
+2. 
+select name
+from Highschooler
+where ID not in (select ID1 from Likes union select ID2 from Likes);
+
+3. 
+select name, grade
+from Highschooler
+where ID in (select ID2 from Likes group by ID2 having count(id1) >1);
+
+4.
+select h1.name, h1.grade, h2.name, h2.grade
+from Highschooler as h1
+join likes as l on l.id1 = h1.id
+join highschooler as h2 on h2.id = l.id2
+where h2.grade <= h1.grade - 2;
+
+5.
+select  h1.name, h1.grade
+from highschooler as h1
+join friend as f on f.id1=h1.id
+join highschooler as h2 on h2.id = f.id2
+where h1.grade=h2.grade
+and not exists (select id from highschooler where id in (
+  select id2 from friend where id1=h1.id) and grade <> h1.grade)
+group by h1.name
+order by h1.grade, h1.name;
+
+8.
+select AVG(count)
+from (
+    select COUNT(*) AS count
+    from Friend
+    GROUP BY ID1
+) AS count;
